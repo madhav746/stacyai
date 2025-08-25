@@ -5,8 +5,9 @@ import { Menu, X, User, History, Heart, Map, LogOut, Mic, Send, Navigation, Shop
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 // Backend API endpoint (adjust to your actual backend URL)
-const BACKEND_API_URL = "http://localhost:8000/ask";
+const BACKEND_API_URL = "http://10.117.150.225:8000/ask";
 
+// --- Product Card Component ---
 // --- Product Card Component ---
 const ProductCard = ({ product, onNavigate }) => {
   if (!product) return null;
@@ -15,27 +16,22 @@ const ProductCard = ({ product, onNavigate }) => {
   const discountedPrice = product.discountedPrice;
   const savedAmount = originalPrice - discountedPrice;
 
-  // Mock functions for Add to Cart/Wishlist
-  const handleAddToCart = (e) => {
-    e.stopPropagation(); // Prevent card click event
-    alert(`Added "${product.name}" to your cart!`);
-  };
-
-  const handleAddToWishlist = (e) => {
-    e.stopPropagation();
-    alert(`Added "${product.name}" to your wishlist!`);
-  };
-
   return (
+    // This div creates the main white box with the border and shadow
     <div className="bg-white p-4 rounded-2xl border border-gray-200 w-64 md:w-72 flex-shrink-0 shadow-lg">
+      
+      {/* This displays the product image */}
       <img 
         src={product.imageUrl} 
         alt={product.name} 
         className="w-full h-40 object-contain rounded-lg mb-3"
         onError={(e) => { e.target.onerror = null; e.target.src='https://placehold.co/400x300/ef4444/ffffff?text=Image+Not+Found'; }}
       />
+      
+      {/* This displays the product name */}
       <h3 className="font-bold text-gray-800 h-12 overflow-hidden text-sm">{product.name}</h3>
       
+      {/* This section displays the prices */}
       <div className="flex items-baseline gap-3 mt-2">
         {discountedPrice && discountedPrice < originalPrice ? (
           <>
@@ -47,12 +43,14 @@ const ProductCard = ({ product, onNavigate }) => {
         )}
       </div>
 
+      {/* This displays the "Save $" bubble */}
       {savedAmount > 0 && (
         <div className="mt-2 inline-block bg-red-100 text-red-700 font-bold text-xs px-3 py-1 rounded-full">
           Save ${savedAmount.toFixed(2)}
         </div>
       )}
       
+      {/* This section contains the buttons */}
       <div className="mt-4 space-y-2">
         <button 
           onClick={() => onNavigate('map')}
@@ -60,16 +58,7 @@ const ProductCard = ({ product, onNavigate }) => {
           <Navigation size={16} />
           <span>Guide Me (Aisle {product.aisle_location})</span>
         </button>
-        <div className="flex gap-2">
-            <button onClick={handleAddToCart} className="w-full bg-red-500 text-white font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-2 hover:bg-red-600 transition-colors text-xs">
-                <ShoppingCart size={16} />
-                <span>Add to Cart</span>
-            </button>
-            <button onClick={handleAddToWishlist} className="w-full bg-gray-200 text-gray-800 font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-300 transition-colors text-xs">
-                <Heart size={16} />
-                <span>Wishlist</span>
-            </button>
-        </div>
+        {/* ... Add to Cart and Wishlist buttons ... */}
       </div>
     </div>
   );
